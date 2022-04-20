@@ -1,24 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Se realiza aplicativo con ruby on rails version 2.6.3 y con Mysql como base de datos 
 
-Things you may want to cover:
+El archivo database.yml debe ser creado en la carpeta config con los parametros
 
-* Ruby version
+  default: &default
+    adapter: mysql2
+    encoding: utf8
+    reconnect: false
+    database: rent
+    pool: 5
+    username: usuario de mysql
+    password: password de my sql
 
-* System dependencies
+  development:
+    <<: *default
+    database: rent
 
-* Configuration
+  test:
+    <<: *default
+    database: rent
 
-* Database creation
+  production:
+    <<: *default
+    database: rent
 
-* Database initialization
 
-* How to run the test suite
+* Ruby version 2.6.3
 
-* Services (job queues, cache servers, search engines, etc.)
+* Database creation: se manejo una base de datos mysql con un esquema llamado "rent"
 
-* Deployment instructions
 
-* ...
