@@ -1,5 +1,5 @@
 class CarsController < ApplicationController
-
+    before_action :authenticate_user!
     def new 
         @cars = Car.new
     end
