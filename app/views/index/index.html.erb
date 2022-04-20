@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+</head>
+<body>
+<div class="container">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<div align="center">
+					<p align="center"><img src="<%= asset_path('cars_image.png') %>" width="450" height="200" border="3"></p>
+					<button><a href="/cars/my_car">My Cars</a></button>
+					<button><a href="/cars/new">Offer Car</a></button>
+					<button><a href="/cars/index">Rent Car</a></button>
+					<button><a href="/cars/my_rent">My Rents</a></button><br>
+				</div>
+			</div>
+			<div>
+				<p>
+					<% if user_signed_in? %>
+						Connected as <%= current_user.email %>. Isn't that you?
+						<%= link_to "Log off", destroy_user_session_path, :method => :delete%>
+					<% else %>
+						<%= link_to "Sign up", new_user_registration_path %> o
+						<%= link_to "Login", new_user_session_path %>
+					<% end %>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

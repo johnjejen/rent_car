@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cars Availables</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="d-flex justify-content-center h-100" align="center">
+                 <div class="card" style="padding:15px;max-width:300px;max-height:800px">
+                    <%= form_tag({:controller => "cars", :action => "reserve_car"},:method => "post", :multipart => true, :class =>'') do %>
+                        <h3 style="color:#ffffff;"><%=@cars.name_car.upcase%></h3>
+                        <p align="center">    <img src="<%=@cars.photo %>" width="200" height="100" align="center"> </p>
+                        <p><b>Description</b><br>
+                        <%=@cars.description%></p>
+                        <p><b>Model</b><br>
+                        <%=@cars.model%></p>
+                        <p><b>Hour Cost</b><br>
+                        <%=@cars.hour_cost%></p>
+                        <p><b>Review</b><br>
+                        <%=@cars.review%></p>
+                        <p><b>Rent Status</b><br>
+                        <%=@cars.rent_status%></p>
+                        <p><b>Rent Date</b><br>
+                        <input type="date" style="border-radius: 10px;" requiered= "" id="reserve_date" name="reserve_date" min="<%=Time.zone.today%>" ></p>
+                        <input type="hidden" name="id_car" requiered= "" value="<%=@cars.id%>">
+                        <input type="hidden" name="hour_cost" readonly  value="<%=@cars.hour_cost%>">
+                        <p><b>Hours for Rent</b><br>
+                        <input style="border-radius: 10px;width: 50px"  type="text" name="rent_hours"  required=""  ></p>
+                        <p clas="text-secondary">Min 3 hours--Max 36 hours</p>
+                        <input type="submit" value="Rent" class="login_btn">
+                        <!--<button onclick="obtener()">Seleccionar</button>-->
+                        <input type="submit" onclick="history.back()" value="Back" class="login_btn"><br></td>
+                   
+                    <%end%>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
