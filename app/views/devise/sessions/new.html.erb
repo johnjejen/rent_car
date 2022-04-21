@@ -47,6 +47,12 @@
             <div class="d-flex justify-content-center">
               <a href="/users/password/new">Forgot your password?</a>
             </div>
+            <% if notice %>
+              <p class="alert alert-success"><%= notice %></p>
+            <% end %>
+            <% if alert %>
+              <p class="alert alert-danger"><%= alert %></p>
+            <% end %>
           </div>
         </div>
       </div>

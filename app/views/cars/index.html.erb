@@ -22,10 +22,8 @@
                         <%=cars.rent_status%></p>
                         <div class="card-footer">
                             <div class="d-flex justify-content-center links">
-                                <%= link_to "SELECT", "view_car/#{cars.id}" %>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <a href="/">BACK</a></p>
+                                <button class="button button2" style="padding:10px;width:88px"><%= link_to "SELECT", "view_car/#{cars.id}" %></button>
+                                <a href="/"><button class="button button2" style="padding:10px;width:80px">BACK</button></a></p>
                             </div>
                         </div>
                     </div>

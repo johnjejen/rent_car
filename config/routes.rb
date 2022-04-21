@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post :review
     get :my_car
     get :edit_car_id
+    post :calculate_cost_rent
 
   end
   get "cars/view_car/:id" => 'cars#view_car'

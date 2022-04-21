@@ -22,6 +22,9 @@ class CarsController < ApplicationController
         @cars.user_id = current_user.id
         @cars.save
 
+        flash[:car_save] = "Create Car succesful" if id_car.blank?
+        flash[:car_save] = "Edit Car succesful" if !id_car.blank?
+
         redirect_to '/'
     end
 
@@ -31,45 +34,62 @@ class CarsController < ApplicationController
 
         if validate_user.blank?
 
+            cost_rent = params[:cost_rent].to_i
+            rent_date = params[:date_from]
+            id_car=params[:id_car]
             hours = params[:rent_hours].to_i
-            cost = params[:hour_cost].to_i
-            rent_date = params[:reserve_date]
 
-            if hours >= 3 and hours<= 36
-                
-                total_rent = (hours * cost)
+            @cars = Car.find(id_car) if !id_car.blank?
+            @cars.rent_status = "Not Available"
+            @cars.save
 
-                id_car=params[:id_car]
+            @rent_car = CarHasRent.new
+            @rent_car.car_id = id_car
+            @rent_car.rent_hours = hours
+            @rent_car.rent_date = rent_date
+            @rent_car.rent_cost = cost_rent
+            @rent_car.user_id = current_user.id
+            @rent_car.rent_status = "Activated"
+            @rent_car.save
 
-                @cars = Car.find(id_car) if !id_car.blank?
-                @cars.rent_status = "Not Available"
-                @cars.save
-
-            
-
-                @rent_car = CarHasRent.new
-                @rent_car.car_id = id_car
-                @rent_car.rent_hours = params[:rent_hours]
-                @rent_car.rent_date = rent_date
-                @rent_car.rent_cost = total_rent
-                @rent_car.user_id = current_user.id
-                @rent_car.rent_status = "Activated"
-                
-                @rent_car.save
-
-                redirect_to '/'
-            else
-
-            end
+            flash[:rent_car] = "Rent Car Succesful"
+            redirect_to '/'
         else
+            flash[:not_rent_car] = "User with Rent Active"
             redirect_to '/'
         end
+    end
+
+    def calculate_cost_rent
+
+        cost = params[:hour_cost].to_i
+        rent_date_from = params[:reserve_date_from]
+        rent_date_to = params[:reserve_date_to]
+        url = params[:url_h]
+        date_from =  Date.parse(rent_date_from.split("T").first)
+        hour_from = rent_date_from.to_time
+
+        hour_to = rent_date_to.to_time
+
+        valid_hour = (hour_to - hour_from)
+
+        if valid_hour >= 10800  and valid_hour <= 129600
+
+            hours = (valid_hour / 3600).to_i
+            total_rent = (hours * cost)
+            flash[:total_rent] = total_rent
+            flash[:rent_hours] = hours
+            flash[:date_from] = date_from
+        else
+            flash[:invalid_hour] = "Invalid Hour"
+        end
+       
+        redirect_to url
     end
 
     def cancel_reserve
 
         rent_id=params[:rent_id]
-
         rent = CarHasRent.where("id=?", rent_id).take
 
         if !rent.blank?
@@ -81,6 +101,8 @@ class CarsController < ApplicationController
             rent_car = CarHasRent.find(rent.id)
             rent_car.rent_status = "Canceled"
             rent_car.save
+
+            flash[:cancel_rent] = "Cancel Rent Succesful"
 
             redirect_to '/'
         else
@@ -103,6 +125,7 @@ class CarsController < ApplicationController
         review_final = (actual_reviews/qty_rents ).to_f
         car.review = review_final
         car.save
+        flash[:review_rent] = "Review Car Succesful"
         redirect_to '/'
 
     end
@@ -136,8 +159,6 @@ class CarsController < ApplicationController
         end
     end
 
-
-
     def view_car
         id_car=params[:id]
         @cars = Car.find(id_car) if !id_car.blank?
@@ -155,6 +176,7 @@ class CarsController < ApplicationController
             path_save = '/'+folder_img+'/'+name_file
             return path_save 
     end
+
     def delete_file(img)
         img_r="#{img}"
         if !img_r.blank?

@@ -20,17 +20,32 @@
                         <%=@cars.review%></p>
                         <p><b>Rent Status</b><br>
                         <%=@cars.rent_status%></p>
-                        <p><b>Rent Date</b><br>
-                        <input type="date" style="border-radius: 10px;" requiered= "" id="reserve_date" name="reserve_date" min="<%=Time.zone.today%>" ></p>
-                        <input type="hidden" name="id_car" requiered= "" value="<%=@cars.id%>">
-                        <input type="hidden" name="hour_cost" readonly  value="<%=@cars.hour_cost%>">
-                        <p><b>Hours for Rent</b><br>
-                        <input style="border-radius: 10px;width: 50px"  type="text" name="rent_hours"  required=""  ></p>
-                        <p clas="text-secondary">Min 3 hours--Max 36 hours</p>
-                        <input type="submit" value="Rent" class="login_btn">
-                        <!--<button onclick="obtener()">Seleccionar</button>-->
-                        <input type="submit" onclick="history.back()" value="Back" class="login_btn"><br></td>
-                   
+                        <% if flash[:total_rent]%>
+                            <input type="hidden" name="id_car" requiered= "" value="<%=@cars.id%>">
+                            <input type="hidden" name="rent_hours" requiered= "" value="<%= flash[:rent_hours]%>">
+                            <input type="hidden" name="date_from" requiered= "" value="<%= flash[:date_from]%>">
+                            <p><b>Cost Rent</b><br>
+                            <input style="border-radius: 10px;width: 70px; align: center" type="text" name="cost_rent" readonly required="" value="$<%=flash[:total_rent]%>"></p>
+                            <input type="submit" value="Rent" class="button button2" style="padding:15px;width:110px;background-color:rgb(13, 220, 113)">
+                            <a href="/cars/index"><button class="button button2" style="padding:15px;width:110px">Back</button></a><br></td>
+                        <%end%>
+                         <% if flash[:invalid_hour]%>
+                            <p class="alert alert-danger"><b><%= flash[:invalid_hour]%><br>
+                        <%end%>
+                    <%end%>
+                    <% if !flash[:total_rent]%>
+                        <%= form_tag({:controller => "cars", :action => "calculate_cost_rent"},:method => "post", :multipart => true, :class =>'') do %>
+                            <p><b>Rent Date From</b><br>
+                            <input type="datetime-local" style="border-radius: 10px;" requiered= "" id="reserve_date_from" name="reserve_date_from" min="<%=Time.new.strftime('%FT%R')%>" value="<%=Time.new.strftime('%FT%R')%>"  ></p>
+                            <p><b>Rent Date To</b><br>
+                            <input type="datetime-local" style="border-radius: 10px;" requiered= "" id="reserve_date_to" name="reserve_date_to" min="<%=Time.new.strftime('%FT%R')%>" value="<%=Time.new.strftime('%FT%R')%>" ></p>
+                            <input type="hidden" name="id_car" requiered= "" value="<%=@cars.id%>">
+                            <input type="hidden" name="hour_cost" readonly  value="<%=@cars.hour_cost%>">
+                            <input type="hidden" name="url_h" readonly  value="<%=request.url%>">
+                            <input type="submit" value="Calculate" class="button button2" style="padding:15px;width:110px;background-color:rgb(13, 220, 113)">
+                            <a href="/cars/index"><button class="button button2" style="padding:15px;width:110px">Back</button></a>
+                           </td>
+                        <%end%>
                     <%end%>
                 </div>
             </div>
