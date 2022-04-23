@@ -148,13 +148,14 @@ class CarsController < ApplicationController
     def my_rent
         @rents=CarHasRent.getrents(current_user.id)
         rents=@rents.where('car_has_rents.rent_status = "Activated"').take
-        if !rents.blank? 
+=begin        if !rents.blank? 
             if rents.rent_date < Time.zone.today
                 cars = Car.where("id = ?",rents.car_id).take
                 cars.rent_status = "Available"
                 cars.save
                 rents.rent_status ='Rent Ended'
                 rents.save
+=end                
             end
         end
     end
