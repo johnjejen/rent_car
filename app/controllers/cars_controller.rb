@@ -155,9 +155,10 @@ class CarsController < ApplicationController
                 cars.save
                 rents.rent_status ='Rent Ended'
                 rents.save
-=end                
+                
             end
         end
+=end
     end
 
     def view_car
