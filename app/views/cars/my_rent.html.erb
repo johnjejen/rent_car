@@ -9,7 +9,7 @@
                 <%not_rents =@rents.length %>
                 <%if not_rents > 0%>
                     <% @rents.each do |rents|%>
-                        <div class="card" style="padding:20px;max-width:300px; height:570px">
+                        <div class="card" style="padding:20px;max-width:300px; height:600px">
                             <%= form_tag({:controller => "cars", :action => "cancel_reserve"},:method => "post", :multipart => true, :class =>'') do %>
                                     <h3 style="color:#ffffff;">Rent Code <%=rents.id%></h3>
                                     <p align="center"><img src="<%=rents.photo %>" width="200" height="100" align="center"> </p>
@@ -19,15 +19,11 @@
                                     <p><b>Rent Date From: </b><%=rents.rent_date%> </p>
                                     <p><b>Rent Date To: </b><%=rents.rent_date_to%> </p>
                                     <p><b>Rent Status: </b><%=rents.rent_status%> </p>
-                                    <%if !rents.review.nil? %>
                                         <p><b>Your Review: </b><%=rents.review%> </p>
-                                    
-                                    <%end%>
-                                     <input type="hidden" name="rent_id" requiered= "" value="<%=rents.id%>">
+                                        <input type="hidden" name="rent_id" requiered= "" value="<%=rents.id%>">
                                     <%if rents.rent_status == "Activated" %>
                                         <%= link_to "Modify Rent", "modify_rent/#{rents.id}" %><br>
                                         <input type="submit" value="Cancel Rent" class="button button2" style="padding:10px;width:110px;background-color:red"><br>
-                                   
                                     <%end%>
                             <%end%>
                                     <%if rents.review.nil? and rents.rent_status == "Rent Ended" %>
@@ -43,7 +39,8 @@
                                         </select>
                                             <input type="submit" value="Review" class="login_btn">
                                         <%end%>
-                                   
+                                   <%else%>
+                                    <p><br><br></p>
                                     <%end%>
                             
                           
