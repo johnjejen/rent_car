@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_20_202620) do
+ActiveRecord::Schema.define(version: 2022_04_23_222416) do
 
   create_table "car_has_rents", charset: "latin1", force: :cascade do |t|
     t.bigint "car_id", null: false
     t.integer "rent_hours"
     t.date "rent_date"
+    t.date "rent_date_to"
     t.float "review"
     t.float "rent_cost"
     t.bigint "user_id", null: false

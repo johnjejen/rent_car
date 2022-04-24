@@ -30,29 +30,39 @@ class CarsController < ApplicationController
 
     def reserve_car
 
-        validate_user = CarHasRent.where("user_id=? and rent_status='Activated' ", current_user.id)
+        rent_id = params[:rent_id]
+
+        validate_user = nil
+        validate_user = CarHasRent.where("user_id=? and rent_status='Activated' ", current_user.id) if rent_id.blank?
 
         if validate_user.blank?
 
             cost_rent = params[:cost_rent].to_i
+            
+
             rent_date = params[:date_from]
-            id_car=params[:id_car]
+            rent_date_to = params[:date_to]
+            @rent_car = CarHasRent.find(rent_id) if !rent_id.blank?
+            id_car = params[:id_car]
+            id_car = @rent_car.car_id if params[:id_car].blank?
             hours = params[:rent_hours].to_i
 
             @cars = Car.find(id_car) if !id_car.blank?
             @cars.rent_status = "Not Available"
             @cars.save
 
-            @rent_car = CarHasRent.new
+            @rent_car = CarHasRent.new if rent_id.blank?
             @rent_car.car_id = id_car
             @rent_car.rent_hours = hours
             @rent_car.rent_date = rent_date
+            @rent_car.rent_date_to = rent_date_to
             @rent_car.rent_cost = cost_rent
             @rent_car.user_id = current_user.id
             @rent_car.rent_status = "Activated"
             @rent_car.save
 
             flash[:rent_car] = "Rent Car Succesful"
+            flash[:rent_car] = "Modify Car Succesful" if !rent_id.blank?
             redirect_to '/'
         else
             flash[:not_rent_car] = "User with Rent Active"
@@ -67,6 +77,7 @@ class CarsController < ApplicationController
         rent_date_to = params[:reserve_date_to]
         url = params[:url_h]
         date_from =  Date.parse(rent_date_from.split("T").first)
+        date_to =  Date.parse(rent_date_to.split("T").first)
         hour_from = rent_date_from.to_time
 
         hour_to = rent_date_to.to_time
@@ -80,9 +91,12 @@ class CarsController < ApplicationController
             flash[:total_rent] = total_rent
             flash[:rent_hours] = hours
             flash[:date_from] = date_from
+            flash[:date_to] = date_to
         else
             flash[:invalid_hour] = "Invalid Hour"
         end
+
+
        
         redirect_to url
     end
@@ -112,8 +126,9 @@ class CarsController < ApplicationController
 
     def review
 
-        id_car =params[:rent_id]
-        cars_review = CarHasRent.where("id=?", id_car).take
+        rent_id =params[:rent_id]
+        cars_review = CarHasRent.where("id=?", rent_id).take
+        
         review_car = params[:review_car].to_i
         cars_review.review = review_car
         cars_review.save
@@ -146,10 +161,12 @@ class CarsController < ApplicationController
     end
 
     def my_rent
-        @rents=CarHasRent.getrents(current_user.id)
+        @rents=CarHasRent.getrents.where('car_has_rents.user_id=?',current_user.id)
         rents=@rents.where('car_has_rents.rent_status = "Activated"').take
-=begin        if !rents.blank? 
-            if rents.rent_date < Time.zone.today
+        time_end = Time.now.strftime('%F').to_date
+
+        if !rents.blank? 
+            if rents.rent_date_to < time_end
                 cars = Car.where("id = ?",rents.car_id).take
                 cars.rent_status = "Available"
                 cars.save
@@ -158,12 +175,16 @@ class CarsController < ApplicationController
                 
             end
         end
-=end
     end
 
     def view_car
-        id_car=params[:id]
+        id_car = params[:id]
         @cars = Car.find(id_car) if !id_car.blank?
+    end
+
+    def modify_rent
+        rent_id = params[:id] if params[:id]
+        @rent_modify = CarHasRent.getrents.where('car_has_rents.id=?',rent_id).take if !rent_id.blank?
     end
 
     private

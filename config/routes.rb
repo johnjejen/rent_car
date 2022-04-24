@@ -20,5 +20,6 @@ Rails.application.routes.draw do
   end
   get "cars/view_car/:id" => 'cars#view_car'
   get "cars/edit_car/:id" => 'cars#edit_car'
+  get "cars/modify_rent/:id" => 'cars#modify_rent'
 
 end
